@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -11,200 +12,104 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@700;800&display=swap');
 
 :root {
---bg: #050e14;
---bg2: #071319;
---bg3: #0a1c25;
---bg4: #0d2030;
---border: #0d2535;
---accent: #00b4d8;
---accent3: #48cae4;
---text: #caf0f8;
---dim: #2a5a72;
---grid: #0a1e2a;
+–bg:#050e14; –bg2:#071319; –bg3:#0a1c25;
+–border:#0d2535; –accent:#00b4d8; –accent3:#48cae4;
+–text:#caf0f8; –dim:#2a5a72; –grid:#0a1e2a;
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
+body{background:var(–bg);color:var(–text);font-family:‘JetBrains Mono’,monospace;display:flex;flex-direction:column}
 
-body{
-background:var(--bg);
-color:var(--text);
-font-family:'JetBrains Mono',monospace;
-display:flex;flex-direction:column;
-}
-
-/* ── Header ── */
-header{
-display:flex;align-items:center;gap:8px;
-padding:8px 16px;
-background:var(--bg2);
-border-bottom:1px solid var(--border);
-flex-shrink:0;flex-wrap:wrap;
-}
+header{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(–bg2);border-bottom:1px solid var(–border);flex-shrink:0;flex-wrap:wrap}
 .logo{display:flex;align-items:baseline;gap:4px;margin-right:4px}
-.logo-px {font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--accent3)}
-.logo-svp{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--text)}
-.logo-tag{font-size:8px;color:var(--dim);letter-spacing:3px;margin-left:2px}
-.sep{width:1px;height:24px;background:var(--border);flex-shrink:0}
-.btn{
-padding:5px 12px;border:none;border-radius:4px;
-font-family:'JetBrains Mono',monospace;
-font-size:9px;font-weight:700;cursor:pointer;
-transition:all 0.15s;letter-spacing:0.5px;flex-shrink:0;
-}
-.btn-primary{background:var(--accent);color:#050e14}
-.btn-primary:hover{background:var(--accent3)}
-.btn-ghost{background:var(--bg3);color:var(--dim);border:1px solid var(--border)}
-.btn-ghost:hover{color:var(--text);border-color:var(--accent)}
-#status{font-size:8px;color:var(--dim);letter-spacing:1px}
-.hdr-right{margin-left:auto;font-size:8px;color:var(--dim);letter-spacing:2px}
+.logo-px{font-family:‘Syne’,sans-serif;font-weight:800;font-size:18px;color:var(–accent3)}
+.logo-svp{font-family:‘Syne’,sans-serif;font-weight:700;font-size:18px;color:var(–text)}
+.logo-tag{font-size:8px;color:var(–dim);letter-spacing:3px;margin-left:2px}
+.sep{width:1px;height:24px;background:var(–border);flex-shrink:0}
+.btn{padding:5px 12px;border:none;border-radius:4px;font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:700;cursor:pointer;transition:all 0.15s;letter-spacing:0.5px;flex-shrink:0}
+.btn-primary{background:var(–accent);color:#050e14}
+.btn-primary:hover{background:var(–accent3)}
+.btn-ghost{background:var(–bg3);color:var(–dim);border:1px solid var(–border)}
+.btn-ghost:hover{color:var(–text);border-color:var(–accent)}
+#status{font-size:8px;color:var(–dim);letter-spacing:1px}
+.hdr-right{margin-left:auto;font-size:8px;color:var(–dim);letter-spacing:2px}
 #file-input{display:none}
 
-/* ── Layout ── */
 .main{display:flex;flex:1;min-height:0}
 
-/* ── Sidebar ── */
-aside{
-width:230px;flex-shrink:0;
-background:var(--bg2);
-border-right:2px solid var(--accent);
-display:flex;flex-direction:column;
-padding:12px 11px;
-overflow-y:auto;
-}
-.sec{
-font-size:7px;letter-spacing:3px;color:var(--dim);
-padding:10px 0 5px;
-border-top:1px solid var(--border);
-display:flex;align-items:center;gap:5px;
-}
-.sec::before{content:'';width:2px;height:9px;background:var(--accent);border-radius:1px}
+aside{width:230px;flex-shrink:0;background:var(–bg2);border-right:2px solid var(–accent);display:flex;flex-direction:column;padding:12px 11px;overflow-y:auto}
+.sec{font-size:7px;letter-spacing:3px;color:var(–dim);padding:10px 0 5px;border-top:1px solid var(–border);display:flex;align-items:center;gap:5px}
+.sec::before{content:’’;width:2px;height:9px;background:var(–accent);border-radius:1px}
 .sec:first-child{border-top:none;padding-top:0}
 
-/* Param buttons */
-.pbtn{
-display:flex;justify-content:space-between;align-items:center;
-width:100%;padding:6px 9px;margin-bottom:2px;
-border-radius:4px;cursor:pointer;
-border:1px solid var(--border);background:transparent;
-font-family:'JetBrains Mono',monospace;
-font-size:9px;font-weight:600;color:var(--dim);
-transition:all 0.15s;
-}
-.pbtn:hover{border-color:var(--accent);color:var(--text)}
-.pbtn.active{background:rgba(0,180,216,0.12);border-color:var(--accent);color:var(--accent3)}
+.pbtn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:6px 9px;margin-bottom:2px;border-radius:4px;cursor:pointer;border:1px solid var(–border);background:transparent;font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:600;color:var(–dim);transition:all 0.15s}
+.pbtn:hover{border-color:var(–accent);color:var(–text)}
+.pbtn.active{background:rgba(0,180,216,0.12);border-color:var(–accent);color:var(–accent3)}
 .pbtn-unit{font-size:7px;opacity:0.4}
 
-/* Profile cards */
-.pcard{
-display:flex;align-items:center;gap:7px;
-padding:6px 7px;margin-bottom:3px;
-border-radius:5px;cursor:pointer;
-border:1px solid transparent;transition:all 0.2s;
-}
+.pcard{display:flex;align-items:center;gap:7px;padding:6px 7px;margin-bottom:3px;border-radius:5px;cursor:pointer;border:1px solid transparent;transition:all 0.2s}
 .pbar{width:3px;height:28px;border-radius:2px;flex-shrink:0}
 .pinfo{flex:1;min-width:0}
 .pname{font-size:8px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.psub{font-size:6px;color:var(--dim);margin-top:1px;letter-spacing:1px}
+.psub{font-size:6px;color:var(–dim);margin-top:1px;letter-spacing:1px}
 .ptoggle{font-size:12px;flex-shrink:0}
 
-/* Stats card */
-.stat-card{
-background:var(--bg3);border:1px solid var(--border);
-border-radius:5px;overflow:hidden;margin-bottom:4px;
-}
-.stat-card-hdr{
-display:flex;align-items:center;gap:6px;
-padding:5px 8px;border-bottom:1px solid var(--border);
-}
+.stat-card{background:var(–bg3);border:1px solid var(–border);border-radius:5px;overflow:hidden;margin-bottom:4px}
+.stat-card-hdr{display:flex;align-items:center;gap:6px;padding:5px 8px;border-bottom:1px solid var(–border)}
 .stat-card-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .stat-card-name{font-size:8px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.stat-cell{padding:5px 8px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.stat-cell{padding:5px 8px;border-right:1px solid var(–border);border-bottom:1px solid var(–border)}
 .stat-cell:nth-child(even){border-right:none}
 .stat-cell:last-child,.stat-cell:nth-last-child(2):nth-child(odd){border-bottom:none}
-.stat-lbl{font-size:6px;color:var(--dim);letter-spacing:1px;margin-bottom:2px}
+.stat-lbl{font-size:6px;color:var(–dim);letter-spacing:1px;margin-bottom:2px}
 .stat-val{font-size:11px;font-weight:700}
 
-/* Readout */
-.readout{background:var(--bg3);border:1px solid var(--border);border-radius:6px;overflow:hidden}
-.readout-bar{height:2px;background:var(--accent)}
+.readout{background:var(–bg3);border:1px solid var(–border);border-radius:6px;overflow:hidden}
+.readout-bar{height:2px;background:var(–accent)}
 .readout-inner{padding:9px}
-#ro-depth{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--text);margin-bottom:7px;line-height:1}
+#ro-depth{font-family:‘Syne’,sans-serif;font-size:24px;font-weight:700;color:var(–text);margin-bottom:7px;line-height:1}
 .rval{margin-bottom:5px}
-.rlabel{font-size:6px;color:var(--dim);letter-spacing:2px}
+.rlabel{font-size:6px;color:var(–dim);letter-spacing:2px}
 .rnum{font-size:14px;font-weight:700}
-#ro-delta{font-size:8px;color:var(--dim);margin-top:5px;padding-top:5px;border-top:1px solid var(--border);min-height:14px}
+#ro-delta{font-size:8px;color:var(–dim);margin-top:5px;padding-top:5px;border-top:1px solid var(–border);min-height:14px}
 
-/* TC */
-.tcrow{display:flex;justify-content:space-between;align-items:center;font-size:8px;padding:3px 0;color:var(--dim)}
-.tcline{width:12px;height:1.5px;border-radius:1px;display:inline-block}
-.tcval{font-weight:700}
+.hints{font-size:7px;color:var(–dim);line-height:2.2;margin-top:4px}
+.hints b{color:var(–accent);font-weight:400}
 
-/* Hints */
-.hints{font-size:7px;color:var(--dim);line-height:2.2;margin-top:4px}
-.hints b{color:var(--accent);font-weight:400}
-
-/* ── Plot area ── */
 .plot-wrap{flex:1;display:flex;flex-direction:column;min-width:0}
-.tabbar{
-display:flex;align-items:center;gap:3px;
-padding:6px 10px;
-background:var(--bg2);border-bottom:1px solid var(--border);
-flex-shrink:0;flex-wrap:wrap;
-}
-.tab-accent{width:3px;height:22px;background:var(--accent);border-radius:1px;margin-right:4px;flex-shrink:0}
-.tbtn{
-padding:4px 11px;border-radius:3px;
-font-family:'JetBrains Mono',monospace;
-font-size:8px;font-weight:600;letter-spacing:0.5px;
-cursor:pointer;border:none;
-background:var(--bg3);color:var(--dim);transition:all 0.15s;
-}
-.tbtn:hover{color:var(--text)}
-.tbtn.active{background:var(--accent);color:#050e14}
-#cursor-lbl{margin-left:auto;font-size:8px;color:var(--dim);letter-spacing:1px;transition:color 0.2s}
-#cursor-lbl.lit{color:var(--text)}
+.tabbar{display:flex;align-items:center;gap:3px;padding:6px 10px;background:var(–bg2);border-bottom:1px solid var(–border);flex-shrink:0;flex-wrap:wrap}
+.tab-accent{width:3px;height:22px;background:var(–accent);border-radius:1px;margin-right:4px;flex-shrink:0}
+.tbtn{padding:4px 11px;border-radius:3px;font-family:‘JetBrains Mono’,monospace;font-size:8px;font-weight:600;letter-spacing:0.5px;cursor:pointer;border:none;background:var(–bg3);color:var(–dim);transition:all 0.15s}
+.tbtn:hover{color:var(–text)}
+.tbtn.active{background:var(–accent);color:#050e14}
+#cursor-lbl{margin-left:auto;font-size:8px;color:var(–dim);letter-spacing:1px;transition:color 0.2s}
+#cursor-lbl.lit{color:var(–text)}
 .plot-rel{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
 #plot{flex:1;min-height:0}
 
-/* Empty overlay */
-#empty-msg{
-position:absolute;inset:0;
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-gap:10px;pointer-events:none;transition:opacity 0.3s;
-}
+#empty-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;pointer-events:none;transition:opacity 0.3s}
 #empty-msg.gone{opacity:0}
 .empty-icon{font-size:38px;opacity:0.15}
-.empty-text{font-size:12px;color:var(--dim);letter-spacing:2px}
-.empty-sub{font-size:8px;color:var(--dim);opacity:0.5}
+.empty-text{font-size:12px;color:var(–dim);letter-spacing:2px}
+.empty-sub{font-size:8px;color:var(–dim);opacity:0.5}
 
-.botbar{
-background:var(--bg2);border-top:1px solid var(--border);
-padding:3px 10px;font-size:6px;color:var(--dim);letter-spacing:1px;flex-shrink:0;
-display:flex;justify-content:space-between;align-items:center;
-}
+.botbar{background:var(–bg2);border-top:1px solid var(–border);padding:3px 10px;font-size:6px;color:var(–dim);letter-spacing:1px;flex-shrink:0;display:flex;justify-content:space-between;align-items:center}
 
 ::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:var(--bg2)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+::-webkit-scrollbar-track{background:var(–bg2)}
+::-webkit-scrollbar-thumb{background:var(–border);border-radius:2px}
 
-/* PDF progress */
-#pdf-progress{
-display:none;position:fixed;inset:0;
-background:rgba(5,14,20,0.85);z-index:999;
-align-items:center;justify-content:center;flex-direction:column;gap:12px;
-}
+#pdf-progress{display:none;position:fixed;inset:0;background:rgba(5,14,20,0.88);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:12px}
 #pdf-progress.show{display:flex}
-#pdf-progress p{font-size:11px;color:var(--accent3);letter-spacing:2px}
+#pdf-progress p{font-size:11px;color:var(–accent3);letter-spacing:2px}
 </style>
+
 </head>
 <body>
 
-<!-- PDF progress -->
 <div id="pdf-progress"><div class="empty-icon">⏳</div><p>GENERATING PDF...</p></div>
 
-<!-- Header -->
 <header>
 <div class="logo">
 <span class="logo-px">PXGEO</span>
@@ -222,13 +127,12 @@ align-items:center;justify-content:center;flex-direction:column;gap:12px;
 <span class="hdr-right">OBN Survey · Sound Velocity Profile</span>
 </header>
 
-<!-- Main -->
 <div class="main">
-<!-- Sidebar -->
 <aside>
 <div class="sec">PARAMETER</div>
 <div id="param-btns"></div>
 
+```
 <div class="sec">PROFILES</div>
 <div id="profile-list"></div>
 
@@ -245,9 +149,6 @@ align-items:center;justify-content:center;flex-direction:column;gap:12px;
 </div>
 </div>
 
-<div class="sec">THERMOCLINE (dT/dz)</div>
-<div id="tc-list"></div>
-
 <div class="sec" style="margin-top:auto">NAVIGATION</div>
 <div class="hints">
 <b>Scroll</b> → zoom in/out<br>
@@ -255,9 +156,10 @@ align-items:center;justify-content:center;flex-direction:column;gap:12px;
 <b>Box</b> → zoom area<br>
 <b>Double-click</b> → reset zoom
 </div>
+```
+
 </aside>
 
-<!-- Plot -->
 <div class="plot-wrap">
 <div class="tabbar">
 <div class="tab-accent"></div>
@@ -280,12 +182,9 @@ align-items:center;justify-content:center;flex-direction:column;gap:12px;
 </div>
 
 <script>
-// ── Constants ─────────────────────────────────────────────────────────────────
-const BG="#050e14",BG2="#071319",BG3="#0a1c25",BG4="#0d2030";
+const BG="#050e14",BG2="#071319",BG3="#0a1c25";
 const ACCENT="#00b4d8",ACCENT3="#48cae4",TEXT="#caf0f8",DIM="#2a5a72",GRID="#0a1e2a";
-
 const COLORS=["#00ffc8","#ff3c3c","#50ff50","#ffc800","#b43cff","#00b4ff","#ff64b4","#ff8c00"];
-
 const PARAMS=[
 {key:"sv", label:"Sound Velocity",unit:"m/s"},
 {key:"temp", label:"Temperature", unit:"°C"},
@@ -293,46 +192,32 @@ const PARAMS=[
 {key:"cond", label:"Conductivity", unit:"mS/cm"},
 ];
 
-let profiles=[], activeParam="sv", hoverDepth=null, plotInited=false;
+let profiles=[],activeParam="sv",hoverDepth=null,plotInited=false;
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 function rgba(hex,a){
 const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
 return `rgba(${r},${g},${b},${a})`;
 }
 function interp(depth,arr,d){
 if(!arr||!arr.length)return null;
-const a=arr.filter((_,i)=>!isNaN(arr[i]));
-const dp=depth.filter((_,i)=>!isNaN(arr[i]));
-if(!a.length)return null;
-if(d<=dp[0])return a[0];
-if(d>=dp[dp.length-1])return a[a.length-1];
-for(let i=0;i<dp.length-1;i++){
-if(d>=dp[i]&&d<=dp[i+1]){
-const t=(d-dp[i])/(dp[i+1]-dp[i]);
-return a[i]+t*(a[i+1]-a[i]);
+const pairs=depth.map((dp,i)=>({dp,v:arr[i]})).filter(p=>!isNaN(p.v));
+if(!pairs.length)return null;
+if(d<=pairs[0].dp)return pairs[0].v;
+if(d>=pairs[pairs.length-1].dp)return pairs[pairs.length-1].v;
+for(let i=0;i<pairs.length-1;i++){
+if(d>=pairs[i].dp&&d<=pairs[i+1].dp){
+const t=(d-pairs[i].dp)/(pairs[i+1].dp-pairs[i].dp);
+return pairs[i].v+t*(pairs[i+1].v-pairs[i].v);
 }
 }
 return null;
 }
-function findTC(depth,temp,limit=600){
-if(!temp||temp.every(isNaN))return null;
-const pairs=depth.map((d,i)=>({d,t:temp[i]})).filter(p=>p.d<=limit&&!isNaN(p.t));
-if(pairs.length<3)return null;
-let maxG=0,tcD=null;
-for(let i=1;i<pairs.length;i++){
-const g=Math.abs(pairs[i].t-pairs[i-1].t)/(pairs[i].d-pairs[i-1].d);
-if(g>maxG){maxG=g;tcD=(pairs[i].d+pairs[i-1].d)/2;}
-}
-return tcD;
-}
 
-// Profile statistics
+// ── Stats (no HMV, no TC) ─────────────────────────────────────────────────────
 function calcStats(prof){
 const sv=prof.sv.filter(v=>!isNaN(v));
 const t=prof.temp.filter(v=>!isNaN(v));
 const s=prof.sal.filter(v=>!isNaN(v));
-const d=prof.depth;
 return{
 svMin:sv.length?Math.min(...sv):null,
 svMax:sv.length?Math.max(...sv):null,
@@ -342,9 +227,8 @@ svBott:sv[sv.length-1]??null,
 tSurf:t[0]??null,
 tBott:t[t.length-1]??null,
 sMean:s.length?s.reduce((a,b)=>a+b,0)/s.length:null,
-depMin:Math.min(...d),
-depMax:Math.max(...d),
-tc:findTC(d,prof.temp),
+depMin:Math.min(...prof.depth),
+depMax:Math.max(...prof.depth),
 };
 }
 
@@ -387,10 +271,8 @@ function loadFiles(files){
 Array.from(files).forEach(file=>{
 const reader=new FileReader();
 reader.onload=e=>{
-try{
-profiles.push(parseCSV(e.target.result,file.name));
-refresh();
-}catch(err){alert(`Cannot parse ${file.name}:\n${err.message}`);}
+try{profiles.push(parseCSV(e.target.result,file.name));refresh();}
+catch(err){alert(`Cannot parse ${file.name}:\n${err.message}`);}
 };
 reader.readAsText(file);
 });
@@ -402,8 +284,6 @@ window.addEventListener("drop",e=>{e.preventDefault();if(e.dataTransfer.files.le
 // ── Plotly ────────────────────────────────────────────────────────────────────
 function buildTraces(){
 const traces=[];
-const showTC=activeParam==="sv"||activeParam==="temp";
-const tcDone=new Set();
 profiles.forEach((prof,i)=>{
 if(!prof.visible)return;
 const col=COLORS[i%COLORS.length];
@@ -422,18 +302,6 @@ const base=Math.min(...arr_f);
 traces.push({x:[...arr_f,...Array(arr_f.length).fill(base)],y:[...dep_f,...[...dep_f].reverse()],fill:"toself",fillcolor:rgba(col,0.06),mode:"none",showlegend:false,hoverinfo:"skip",name:`_fill_${i}`});
 // Core
 traces.push({x:arr_f,y:dep_f,mode:"lines",name:prof.short,line:{color:col,width:2.2,shape:"spline",smoothing:0.5},hovertext:hover,hovertemplate:"%{hovertext}<extra></extra>"});
-// TC
-if(showTC){
-const tcD=findTC(prof.depth,prof.temp);
-if(tcD!==null){
-const key=Math.round(tcD/25)*25;
-const tcV=interp(prof.depth,arr,tcD);
-if(tcV!==null&&!tcDone.has(key)){
-traces.push({x:[tcV],y:[tcD],mode:"markers+text",marker:{symbol:"diamond",size:11,color:col,line:{color:"white",width:1}},text:[` TC ${tcD.toFixed(0)} m`],textposition:"top right",textfont:{color:col,size:10},showlegend:false,hovertemplate:`Thermocline: ${tcD.toFixed(0)} m<extra></extra>`,name:`_tc_${i}`});
-tcDone.add(key);
-}
-}
-}
 });
 return traces;
 }
@@ -456,19 +324,6 @@ const shapes=[];
 [[0,200,"rgba(0,20,32,0.5)"],[200,1000,"rgba(0,14,24,0.4)"],[1000,9999,"rgba(0,8,15,0.3)"]].forEach(([y1,y2,fc])=>{
 if(y1<yMax)shapes.push({type:"rect",xref:"paper",yref:"y",x0:0,x1:1,y0:y1,y1:Math.min(y2,yMax),fillcolor:fc,line:{width:0},layer:"below"});
 });
-const showTC=activeParam==="sv"||activeParam==="temp";
-if(showTC){
-const tcDone=new Set();
-vis.forEach((prof,i)=>{
-const tcD=findTC(prof.depth,prof.temp);
-if(tcD===null)return;
-const key=Math.round(tcD/25)*25;
-if(tcDone.has(key))return;
-const col=COLORS[profiles.indexOf(prof)%COLORS.length];
-shapes.push({type:"line",xref:"paper",yref:"y",x0:0,x1:1,y0:tcD,y1:tcD,line:{color:col,width:1,dash:"dot"},opacity:0.4});
-tcDone.add(key);
-});
-}
 const annotations=[];
 [[90,"EPIPELAGIC"],[500,"MESOPELAGIC"],[1600,"BATHYPELAGIC"]].forEach(([yd,lbl])=>{
 if(yd<yMax)annotations.push({x:1,y:yd,xref:"paper",yref:"y",text:lbl,showarrow:false,font:{size:9,color:DIM,family:"JetBrains Mono"},xanchor:"right",yanchor:"middle"});
@@ -498,11 +353,9 @@ document.getElementById("plot").on("plotly_hover",data=>{
 try{
 const pt=data.points.find(p=>!p.data.name?.startsWith("_"));
 if(!pt)return;
-hoverDepth=pt.y;
-updateReadout(pt.y);
+hoverDepth=pt.y;updateReadout(pt.y);
 const lbl=document.getElementById("cursor-lbl");
-lbl.textContent=`⊕ ${pt.y.toFixed(1)} m`;
-lbl.classList.add("lit");
+lbl.textContent=`⊕ ${pt.y.toFixed(1)} m`;lbl.classList.add("lit");
 }catch(e){}
 });
 document.getElementById("plot").on("plotly_unhover",()=>{
@@ -515,7 +368,7 @@ Plotly.react("plot",traces,layout,config);
 }
 }
 
-// ── Sidebar renders ───────────────────────────────────────────────────────────
+// ── Sidebar ───────────────────────────────────────────────────────────────────
 function renderParamBtns(){
 document.getElementById("param-btns").innerHTML=PARAMS.map(p=>`
 <button class="pbtn${p.key===activeParam?" active":""}" onclick="activeParam='${p.key}';refresh()">
@@ -532,7 +385,7 @@ const pl=document.getElementById("profile-list");
 if(!profiles.length){pl.innerHTML=`<div style="font-size:8px;color:var(--dim);margin-top:4px">No profiles loaded</div>`;return;}
 pl.innerHTML=profiles.map((prof,i)=>{
 const col=COLORS[i%COLORS.length];const vis=prof.visible;
-return`<div class="pcard${vis?"":" "}" style="border-color:${vis?col+"44":"transparent"};background:${vis?col+"0a":"transparent"};opacity:${vis?1:0.35}" onclick="profiles[${i}].visible=!profiles[${i}].visible;refresh()">
+return`<div class="pcard" style="border-color:${vis?col+"44":"transparent"};background:${vis?col+"0a":"transparent"};opacity:${vis?1:0.35}" onclick="profiles[${i}].visible=!profiles[${i}].visible;refresh()">
 <div class="pbar" style="background:${vis?col:"var(--dim)"}"></div>
 <div class="pinfo">
 <div class="pname" style="color:${vis?col:"var(--dim)"}">${prof.short}</div>
@@ -547,11 +400,11 @@ function renderStats(){
 const sl=document.getElementById("stats-list");
 const vis=profiles.filter(p=>p.visible);
 if(!vis.length){sl.innerHTML=`<div style="font-size:8px;color:var(--dim)">—</div>`;return;}
+const fmt=(v,d=2)=>v!==null&&!isNaN(v)?v.toFixed(d):"N/A";
 sl.innerHTML=vis.map(prof=>{
 const i=profiles.indexOf(prof);
 const col=COLORS[i%COLORS.length];
 const st=calcStats(prof);
-const fmt=(v,d=2)=>v!==null&&!isNaN(v)?v.toFixed(d):"N/A";
 return`<div class="stat-card" style="border-color:${col}33">
 <div class="stat-card-hdr">
 <div class="stat-card-dot" style="background:${col}"></div>
@@ -559,31 +412,15 @@ return`<div class="stat-card" style="border-color:${col}33">
 </div>
 <div class="stat-grid">
 <div class="stat-cell"><div class="stat-lbl">DEPTH RANGE</div><div class="stat-val" style="color:${col};font-size:9px">${fmt(st.depMin,0)}–${fmt(st.depMax,0)} m</div></div>
-<div class="stat-cell"><div class="stat-lbl">THERMOCLINE</div><div class="stat-val" style="color:${col};font-size:9px">${st.tc?st.tc.toFixed(0)+" m":"N/A"}</div></div>
 <div class="stat-cell"><div class="stat-lbl">SV SURFACE</div><div class="stat-val" style="color:${col}">${fmt(st.svSurf)}</div></div>
 <div class="stat-cell"><div class="stat-lbl">SV BOTTOM</div><div class="stat-val" style="color:${col}">${fmt(st.svBott)}</div></div>
 <div class="stat-cell"><div class="stat-lbl">SV MIN</div><div class="stat-val" style="color:${col}">${fmt(st.svMin)}</div></div>
 <div class="stat-cell"><div class="stat-lbl">SV MAX</div><div class="stat-val" style="color:${col}">${fmt(st.svMax)}</div></div>
 <div class="stat-cell"><div class="stat-lbl">MEAN SV</div><div class="stat-val" style="color:${col}">${fmt(st.svMean)}</div></div>
-<div class="stat-cell"><div class="stat-lbl">T SURFACE</div><div class="stat-val" style="color:${col}">${fmt(st.tSurf)} °v></diC</div></div>
+<div class="stat-cell"><div class="stat-lbl">T SURFACE</div><div class="stat-val" style="color:${col}">${fmt(st.tSurf)} °C</div></div>
 <div class="stat-cell"><div class="stat-lbl">T BOTTOM</div><div class="stat-val" style="color:${col}">${fmt(st.tBott)} °C</div></div>
 <div class="stat-cell"><div class="stat-lbl">MEAN SAL</div><div class="stat-val" style="color:${col}">${fmt(st.sMean)} PSU</div></div>
 </div>
-</div>`;
-}).join("");
-}
-
-function renderTCList(){
-const tc=document.getElementById("tc-list");
-const vis=profiles.filter(p=>p.visible);
-if(!vis.length){tc.innerHTML=`<div style="font-size:8px;color:var(--dim)">—</div>`;return;}
-tc.innerHTML=vis.map(prof=>{
-const i=profiles.indexOf(prof);
-const col=COLORS[i%COLORS.length];
-const tcD=findTC(prof.depth,prof.temp);
-return`<div class="tcrow">
-<span><span class="tcline" style="background:${col}"></span> ${prof.short.slice(0,16)}</span>
-<span class="tcval" style="color:${col}">${tcD?tcD.toFixed(0)+" m":"N/A"}</span>
 </div>`;
 }).join("");
 }
@@ -625,18 +462,18 @@ function exportPNG(){if(plotInited)Plotly.downloadImage("plot",{format:"png",fil
 
 function exportCSV(){
 if(!profiles.length)return;
-const rows=["Profile,Depth min,Depth max,SV min,SV max,SV mean,T surface,T bottom,Mean Sal,Thermocline (m)"];
+const rows=["Profile,Depth min,Depth max,SV surface,SV bottom,SV min,SV max,SV mean,T surface,T bottom,Mean Sal"];
 profiles.filter(p=>p.visible).forEach(prof=>{
 const st=calcStats(prof);
 const f=(v,d=2)=>v!==null&&!isNaN(v)?v.toFixed(d):"N/A";
-rows.push([prof.short,f(st.depMin,0),f(st.depMax,0),f(st.svMin),f(st.svMax),f(st.svMean),f(st.tSurf),f(st.tBott),f(st.sMean),st.tc?st.tc.toFixed(0):"N/A"].join(","));
+rows.push([prof.short,f(st.depMin,0),f(st.depMax,0),f(st.svSurf),f(st.svBott),f(st.svMin),f(st.svMax),f(st.svMean),f(st.tSurf),f(st.tBott),f(st.sMean)].join(","));
 });
 const blob=new Blob([rows.join("\n")],{type:"text/csv"});
 const a=document.createElement("a");a.href=URL.createObjectURL(blob);
 a.download=`SVP_summary_${new Date().toISOString().slice(0,10)}.csv`;a.click();
 }
 
-// ── PDF Export ────────────────────────────────────────────────────────────────
+// ── PDF Export — simple clean version ─────────────────────────────────────────
 async function exportPDF(){
 if(!profiles.length)return;
 const pg=document.getElementById("pdf-progress");
@@ -645,121 +482,109 @@ await new Promise(r=>setTimeout(r,100));
 
 try{
 const {jsPDF}=window.jspdf;
-const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
 const W=297,H=210;
 const vis=profiles.filter(p=>p.visible);
+const fmt=(v,d=2)=>v!==null&&!isNaN(v)?v.toFixed(d):"N/A";
 
-// ── Page 1: Cover + Stats table ──
+// ── Page 1: current graph screenshot ──
+const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+
+// Capture current plot
+const imgData=await Plotly.toImage("plot",{format:"png",width:1600,height:820,scale:1.5});
+
 // Dark background
 doc.setFillColor(5,14,20);doc.rect(0,0,W,H,"F");
 
-// Header band
-doc.setFillColor(7,19,25);doc.rect(0,0,W,22,"F");
-doc.setDrawColor(0,180,216);doc.setLineWidth(0.5);doc.line(0,22,W,22);
-
-// Logo
-doc.setFontSize(22);doc.setFont("helvetica","bold");
-doc.setTextColor(72,202,228);doc.text("PXGEO",12,14);
-doc.setTextColor(202,240,248);doc.text(" SVP",44,14);
+// Header
+doc.setFillColor(7,19,25);doc.rect(0,0,W,18,"F");
+doc.setDrawColor(0,180,216);doc.setLineWidth(0.4);doc.line(0,18,W,18);
+doc.setFontSize(18);doc.setFont("helvetica","bold");
+doc.setTextColor(72,202,228);doc.text("PXGEO",12,13);
+doc.setTextColor(202,240,248);doc.text(" SVP",38,13);
 doc.setFontSize(8);doc.setFont("helvetica","normal");
-doc.setTextColor(42,90,114);doc.text("ALFA",72,14);
+doc.setTextColor(42,90,114);
+doc.text("Sound Velocity Profile · OBN Survey",68,13);
+doc.text(new Date().toLocaleString("en-GB"),W-10,13,{align:"right"});
 
-// Report info
-doc.setFontSize(9);doc.setTextColor(42,90,114);
-doc.text("Sound Velocity Profile · OBN Survey · Comparison Report",12,19);
-doc.text(new Date().toLocaleString("en-GB"),W-12,14,{align:"right"});
+// Chart
+doc.addImage(imgData,"PNG",8,20,W-16,H-28);
+doc.setDrawColor(0,150,180);doc.setLineWidth(0.3);
+doc.rect(8,20,W-16,H-28);
 
-// Accent line
-doc.setDrawColor(0,180,216);doc.setLineWidth(0.3);doc.line(12,22,W-12,22);
+// Footer
+doc.setFontSize(6);doc.setTextColor(42,90,114);
+doc.text(`PXGEO SVP alfa · ${new Date().toLocaleDateString("en-GB")}`,10,H-2);
 
-// Stats table
-const stHeaders=["Profile","Depth (m)","SV surf","SV min","SV max","SV mean","T surf °C","T bot °C","Sal PSU","TC (m)"];
-const stRows=vis.map((prof,i)=>{
-const st=calcStats(prof);
-const f=(v,d=2)=>v!==null&&!isNaN(v)?v.toFixed(d):"N/A";
-return[prof.short.slice(0,22),`${f(st.depMin,0)}–${f(st.depMax,0)}`,f(st.svSurf),f(st.svMin),f(st.svMax),f(st.svMean),f(st.tSurf),f(st.tBott),f(st.sMean),st.tc?st.tc.toFixed(0):"N/A"];
-});
-
-// Table header
-const tY=30,tX=12,cW=[38,20,16,14,14,14,14,14,14,12];
-let cx=tX;
-doc.setFillColor(0,150,180);doc.rect(tX,tY,W-24,8,"F");
-doc.setFontSize(7);doc.setFont("helvetica","bold");doc.setTextColor(255,255,255);
-stHeaders.forEach((h,i)=>{doc.text(h,cx+1,tY+5.5);cx+=cW[i];});
-
-// Table rows
-stRows.forEach((row,ri)=>{
-const ry=tY+8+ri*10;
-const profColor=vis[ri]?COLORS[profiles.indexOf(vis[ri])%COLORS.length]:"#2a5a72";
-const r=parseInt(profColor.slice(1,3),16),g=parseInt(profColor.slice(3,5),16),b=parseInt(profColor.slice(5,7),16);
-doc.setFillColor(ri%2===0?10:13,ri%2===0?28:32,ri%2===0?37:48);
-doc.rect(tX,ry,W-24,10,"F");
-// color bar
-doc.setFillColor(r,g,b);doc.rect(tX,ry,2,10,"F");
-cx=tX+3;
-doc.setFont("helvetica","normal");doc.setFontSize(7);
-row.forEach((cell,ci)=>{
-if(ci===0)doc.setTextColor(r,g,b);
-else doc.setTextColor(202,240,248);
-doc.text(String(cell),cx+0.5,ry+6);cx+=cW[ci];
-});
-// row bottom border
-doc.setDrawColor(13,37,53);doc.setLineWidth(0.2);doc.line(tX,ry+10,tX+W-24,ry+10);
-});
-
-// Table outer border
-doc.setDrawColor(0,150,180);doc.setLineWidth(0.4);
-doc.rect(tX,tY,W-24,8+stRows.length*10);
-
-// Legend
-const legY=tY+8+stRows.length*10+8;
-doc.setFontSize(7);doc.setTextColor(42,90,114);
-doc.text("HMV = Harmonic Mean Velocity · TWTT = Two-Way Travel Time to bottom · TC = Thermocline depth (max dT/dz)",tX,legY);
-
-// ── Page 2: Plot screenshots (one per param) ──
-// We capture the Plotly chart as PNG for each param
-const origParam=activeParam;
-const paramsToPrint=PARAMS;
-
-for(let pi=0;pi<paramsToPrint.length;pi++){
-const p=paramsToPrint[pi];
-activeParam=p.key;
-renderPlot();
-await new Promise(r=>setTimeout(r,400)); // let plotly render
-
-const imgData=await Plotly.toImage("plot",{format:"png",width:1400,height:700,scale:1.5});
-
+// ── Page 2: Statistics table ──
 doc.addPage("a4","landscape");
 doc.setFillColor(5,14,20);doc.rect(0,0,W,H,"F");
 
 // Header
-doc.setFillColor(7,19,25);doc.rect(0,0,W,16,"F");
-doc.setDrawColor(0,180,216);doc.setLineWidth(0.3);doc.line(0,16,W,16);
-doc.setFontSize(14);doc.setFont("helvetica","bold");
-doc.setTextColor(72,202,228);doc.text("PXGEO",12,11);
-doc.setTextColor(202,240,248);doc.text(" SVP",38,11);
-doc.setFontSize(9);doc.setFont("helvetica","normal");
+doc.setFillColor(7,19,25);doc.rect(0,0,W,18,"F");
+doc.setDrawColor(0,180,216);doc.setLineWidth(0.4);doc.line(0,18,W,18);
+doc.setFontSize(18);doc.setFont("helvetica","bold");
+doc.setTextColor(72,202,228);doc.text("PXGEO",12,13);
+doc.setTextColor(202,240,248);doc.text(" SVP",38,13);
+doc.setFontSize(8);doc.setFont("helvetica","normal");
 doc.setTextColor(42,90,114);
-doc.text(`${p.label} (${p.unit})`,60,11);
-doc.text(new Date().toLocaleString("en-GB"),W-12,11,{align:"right"});
+doc.text("Statistics Summary · OBN Survey",68,13);
+doc.text(new Date().toLocaleString("en-GB"),W-10,13,{align:"right"});
 
-// Chart image
-doc.addImage(imgData,"PNG",8,18,W-16,H-26);
+// Table
+const headers=["Profile","Depth (m)","SV surf","SV bot","SV min","SV max","SV mean","T surf °C","T bot °C","Sal PSU"];
+const colW= [55, 25, 20, 20, 18, 18, 18, 20, 20, 18];
+const tX=10,tY=24,rowH=10;
 
-// Accent borders
+// Header row
+doc.setFillColor(0,150,180);doc.rect(tX,tY,W-20,rowH,"F");
+doc.setFontSize(7);doc.setFont("helvetica","bold");doc.setTextColor(255,255,255);
+let cx=tX;
+headers.forEach((h,i)=>{doc.text(h,cx+1.5,tY+6.5);cx+=colW[i];});
+
+// Data rows
+vis.forEach((prof,ri)=>{
+const st=calcStats(prof);
+const row=[
+prof.short.slice(0,26),
+`${fmt(st.depMin,0)}–${fmt(st.depMax,0)}`,
+fmt(st.svSurf),fmt(st.svBott),fmt(st.svMin),fmt(st.svMax),fmt(st.svMean),
+fmt(st.tSurf),fmt(st.tBott),fmt(st.sMean),
+];
+const ry=tY+rowH+ri*rowH;
+const colHex=COLORS[profiles.indexOf(prof)%COLORS.length];
+const r=parseInt(colHex.slice(1,3),16),g=parseInt(colHex.slice(3,5),16),b=parseInt(colHex.slice(5,7),16);
+
+// Row bg
+doc.setFillColor(ri%2===0?10:14,ri%2===0?28:35,ri%2===0?38:50);
+doc.rect(tX,ry,W-20,rowH,"F");
+// Color accent bar
+doc.setFillColor(r,g,b);doc.rect(tX,ry,2,rowH,"F");
+// Border
+doc.setDrawColor(13,37,53);doc.setLineWidth(0.2);doc.line(tX,ry+rowH,tX+W-20,ry+rowH);
+
+cx=tX+3;
+doc.setFont("helvetica","normal");doc.setFontSize(7);
+row.forEach((cell,ci)=>{
+doc.setTextColor(ci===0?r:202,ci===0?g:240,ci===0?b:248);
+doc.text(String(cell),cx+0.5,ry+6.5);
+cx+=colW[ci];
+});
+});
+
+// Table border
 doc.setDrawColor(0,150,180);doc.setLineWidth(0.4);
-doc.rect(8,18,W-16,H-26);
-}
+doc.rect(tX,tY,W-20,rowH*(vis.length+1));
 
-activeParam=origParam;
-renderPlot();
+// Footer
+doc.setFontSize(6);doc.setTextColor(42,90,114);
+doc.text(`PXGEO SVP alfa · ${new Date().toLocaleDateString("en-GB")}`,10,H-2);
 
 doc.save(`SVP_report_${new Date().toISOString().slice(0,10)}.pdf`);
+
 }catch(e){
 console.error("PDF error:",e);
-alert("PDF generation failed: "+e.message);
+alert("PDF error: "+e.message);
 }
-
 pg.classList.remove("show");
 }
 
@@ -768,7 +593,6 @@ function refresh(){
 renderParamBtns();
 renderProfileList();
 renderStats();
-renderTCList();
 updateStatus();
 renderPlot();
 updateReadout(hoverDepth);
@@ -779,5 +603,6 @@ new Date().toLocaleDateString("en-GB",{year:"numeric",month:"short",day:"numeric
 
 refresh();
 </script>
+
 </body>
 </html>
