@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PXGEO SVP</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@700;800&display=swap');
+
+:root {
+–bg: #050e14;
+–bg2: #071319;
+–bg3: #0a1c25;
+–border: #0d2535;
+–accent: #00b4d8;
+–accent3: #48cae4;
+–text: #caf0f8;
+–dim: #2a5a72;
+–grid: #0a1e2a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘JetBrains Mono’, monospace;
+height: 100vh;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+header {
+display: flex;
+align-items: center;
+gap: 10px;
+padding: 9px 18px;
+background: var(–bg2);
+border-bottom: 1px solid var(–border);
+flex-shrink: 0;
+flex-wrap: wrap;
+}
+
+.logo {
+display: flex;
+align-items: baseline;
+gap: 5px;
+margin-right: 6px;
+}
+.logo-px { font-family:‘Syne’,sans-serif; font-weight:800; font-size:19px; color:var(–accent3); }
+.logo-svp { font-family:‘Syne’,sans-serif; font-weight:700; font-size:19px; color:var(–text); }
+.logo-tag { font-size:8px; color:var(–dim); letter-spacing:3px; margin-left:2px; }
+
+.sep { width:1px; height:26px; background:var(–border); flex-shrink:0; }
+
+.btn {
+padding: 6px 14px;
+border: none; border-radius: 4px;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px; font-weight: 700;
+cursor: pointer; transition: all 0.15s;
+letter-spacing: 0.5px; flex-shrink: 0;
+}
+.btn-primary { background: var(–accent); color: #050e14; }
+.btn-primary:hover { background: var(–accent3); transform: translateY(-1px); }
+.btn-ghost {
+background: var(–bg3); color: var(–dim);
+border: 1px solid var(–border);
+}
+.btn-ghost:hover { color: var(–text); border-color: var(–accent); }
+
+#status { font-size:9px; color:var(–dim); letter-spacing:1px; }
+.hdr-right { margin-left:auto; font-size:8px; color:var(–dim); letter-spacing:2px; }
+
+/* Drop zone overlay on label */
+#file-label { display:contents; cursor:pointer; }
+#file-input { display:none; }
+
+/* ── Layout ─────────────────────────────────────────────────── */
+.main { display:flex; flex:1; min-height:0; }
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+aside {
+width: 224px; flex-shrink: 0;
+background: var(–bg2);
+border-right: 2px solid var(–accent);
+display: flex; flex-direction: column;
+padding: 14px 12px;
+overflow-y: auto;
+gap: 0;
+}
+
+.sec {
+font-size: 8px; letter-spacing: 3px; color: var(–dim);
+padding: 12px 0 6px;
+border-top: 1px solid var(–border);
+display: flex; align-items: center; gap: 5px;
+}
+.sec::before { content:’’; width:2px; height:9px; background:var(–accent); border-radius:1px; }
+.sec:first-child { border-top: none; padding-top: 0; }
+
+/* Param buttons */
+.pbtn {
+display: flex; justify-content: space-between; align-items: center;
+width: 100%; padding: 7px 10px; margin-bottom: 3px;
+border-radius: 4px; cursor: pointer;
+border: 1px solid var(–border);
+background: transparent;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px; font-weight: 600;
+color: var(–dim); letter-spacing: 0.5px;
+transition: all 0.15s;
+}
+.pbtn:hover { border-color: var(–accent); color: var(–text); }
+.pbtn.active {
+background: rgba(0,180,216,0.12);
+border-color: var(–accent);
+color: var(–accent3);
+}
+.pbtn-unit { font-size: 8px; opacity: 0.4; }
+
+/* Profile cards */
+.pcard {
+display: flex; align-items: center; gap: 8px;
+padding: 7px 8px; margin-bottom: 3px;
+border-radius: 5px; cursor: pointer;
+border: 1px solid transparent;
+transition: all 0.2s;
+user-select: none;
+}
+.pcard:hover { background: rgba(255,255,255,0.03); }
+.pcard.hidden-prof { opacity: 0.3; }
+.pbar { width:3px; height:30px; border-radius:2px; flex-shrink:0; }
+.pinfo { flex:1; min-width:0; }
+.pname { font-size:9px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.psub { font-size:7px; color:var(–dim); margin-top:2px; letter-spacing:1px; }
+.ptoggle { font-size:13px; flex-shrink:0; }
+
+/* Readout */
+.readout {
+background: var(–bg3);
+border: 1px solid var(–border);
+border-radius: 6px; overflow: hidden;
+}
+.readout-bar { height: 2px; background: var(–accent); }
+.readout-inner { padding: 10px; }
+#ro-depth {
+font-family: ‘Syne’, sans-serif;
+font-size: 26px; font-weight: 700;
+color: var(–text); margin-bottom: 8px; line-height: 1;
+}
+.rval { margin-bottom: 6px; }
+.rlabel { font-size: 7px; color: var(–dim); letter-spacing: 2px; }
+.rnum { font-size: 15px; font-weight: 700; }
+#ro-delta {
+font-size: 9px; color: var(–dim);
+margin-top: 6px; padding-top: 6px;
+border-top: 1px solid var(–border);
+min-height: 16px;
+}
+
+/* TC */
+.tcrow {
+display:flex; justify-content:space-between; align-items:center;
+font-size:9px; padding:3px 0; color:var(–dim);
+}
+.tcline { width:14px; height:1.5px; border-radius:1px; display:inline-block; }
+.tcval { font-weight:700; }
+
+/* Hints */
+.hints { font-size:7px; color:var(–dim); line-height:2.2; margin-top:4px; }
+.hints b { color:var(–accent); font-weight:400; }
+
+/* ── Plot area ───────────────────────────────────────────────── */
+.plot-wrap {
+flex:1; display:flex; flex-direction:column; min-width:0;
+}
+
+.tabbar {
+display:flex; align-items:center; gap:4px;
+padding: 7px 12px;
+background: var(–bg2);
+border-bottom: 1px solid var(–border);
+flex-shrink:0; flex-wrap:wrap;
+}
+.tab-accent { width:3px; height:24px; background:var(–accent); border-radius:1px; margin-right:4px; flex-shrink:0; }
+.tbtn {
+padding: 4px 12px; border-radius:3px;
+font-family:‘JetBrains Mono’,monospace;
+font-size:9px; font-weight:600; letter-spacing:0.5px;
+cursor:pointer; border:none;
+background:var(–bg3); color:var(–dim);
+transition:all 0.15s;
+}
+.tbtn:hover { color:var(–text); }
+.tbtn.active { background:var(–accent); color:#050e14; }
+#cursor-lbl { margin-left:auto; font-size:8px; color:var(–dim); letter-spacing:1px; transition:color 0.2s; }
+#cursor-lbl.lit { color:var(–text); }
+
+#plot { flex:1; min-height:0; }
+
+.botbar {
+background:var(–bg2); border-top:1px solid var(–border);
+padding:3px 12px; font-size:7px; color:var(–dim); letter-spacing:1px;
+flex-shrink:0;
+}
+
+/* Empty overlay */
+#empty-msg {
+position:absolute; inset:0;
+display:flex; flex-direction:column;
+align-items:center; justify-content:center;
+gap:12px; pointer-events:none;
+transition:opacity 0.3s;
+}
+#empty-msg.gone { opacity:0; }
+.empty-icon { font-size:40px; opacity:0.2; }
+.empty-text { font-size:13px; color:var(–dim); letter-spacing:2px; }
+.empty-sub { font-size:9px; color:var(–dim); opacity:0.5; }
+.plot-rel { position:relative; flex:1; min-height:0; display:flex; flex-direction:column; }
+
+/* Drag-over highlight */
+body.dragover header { border-bottom-color: var(–accent3); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(–bg2); }
+::-webkit-scrollbar-thumb { background:var(–border); border-radius:2px; }
+</style>
+
+</head>
+<body>
+
+<!-- ── Header ── -->
+
+<header>
+<div class="logo">
+<span class="logo-px">PXGEO</span>
+<span class="logo-svp">SVP</span>
+<span class="logo-tag">ALFA</span>
+</div>
+<div class="sep"></div>
+
+<label id="file-label" for="file-input">
+<span class="btn btn-primary">+ Add CSV</span>
+</label>
+<input type="file" id="file-input" accept=".csv" multiple/>
+
+<button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+<button class="btn btn-ghost" onclick="exportPNG()">Export PNG</button>
+<button class="btn btn-ghost" onclick="exportCSVSummary()">Export CSV</button>
+
+<span id="status">No profiles loaded</span>
+<span class="hdr-right">OBN Survey · Sound Velocity Profile</span>
+
+</header>
+
+<!-- ── Main ── -->
+
+<div class="main">
+
+<!-- Sidebar -->
+
+<aside>
+<div class="sec">PARAMETER</div>
+<div id="param-btns"></div>
+
+```
+<div class="sec">PROFILES</div>
+<div id="profile-list"></div>
+
+<div class="sec">READOUT</div>
+<div class="readout">
+<div class="readout-bar"></div>
+<div class="readout-inner">
+<div id="ro-depth">—</div>
+<div id="ro-vals"></div>
+<div id="ro-delta"></div>
+</div>
+</div>
+
+<div class="sec">THERMOCLINE (dT/dz)</div>
+<div id="tc-list"></div>
+
+<div class="sec" style="margin-top:auto">NAVIGATION</div>
+<div class="hints">
+<b>Scroll</b> → zoom in / out<br>
+<b>Drag</b> → pan<br>
+<b>Box select</b> → zoom area<br>
+<b>Double-click</b> → reset zoom
+</div>
+```
+
+</aside>
+
+<!-- Plot -->
+
+<div class="plot-wrap">
+<div class="tabbar">
+<div class="tab-accent"></div>
+<div id="tab-btns"></div>
+<span id="cursor-lbl">Hover to inspect</span>
+</div>
+<div class="plot-rel">
+<div id="plot"></div>
+<div id="empty-msg">
+<div class="empty-icon">⊕</div>
+<div class="empty-text">CLICK + ADD CSV TO LOAD PROFILES</div>
+<div class="empty-sub">supports UHD ROV UpCast / DownCast format</div>
+</div>
+</div>
+<div class="botbar">PXGEO · OBN Survey · SVP alfa · Sound Velocity Profile Analyzer · <span id="bot-date"></span></div>
+</div>
+</div>
+
+<script>
+// ── Constants ─────────────────────────────────────────────────────────────────
+const BG = "#050e14";
+const BG2 = "#071319";
+const BG3 = "#0a1c25";
+const ACCENT = "#00b4d8";
+const ACCENT3 = "#48cae4";
+const TEXT = "#caf0f8";
+const DIM = "#2a5a72";
+const GRID = "#0a1e2a";
+
+const COLORS = [
+"#00ffc8","#ff3c3c","#50ff50","#ffc800",
+"#b43cff","#00b4ff","#ff64b4","#ff8c00",
+];
+
+const PARAMS = [
+{key:"sv", label:"Sound Velocity", unit:"m/s"},
+{key:"temp", label:"Temperature", unit:"°C"},
+{key:"sal", label:"Salinity", unit:"PSU"},
+{key:"cond", label:"Conductivity", unit:"mS/cm"},
+];
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let profiles = []; // [{label,short,visible,depth[],sv[],temp[],sal[],cond[]}]
+let activeParam = "sv";
+let hoverDepth = null;
+let plotInited = false;
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function hexToRgb(hex) {
+const r = parseInt(hex.slice(1,3),16);
+const g = parseInt(hex.slice(3,5),16);
+const b = parseInt(hex.slice(5,7),16);
+return {r,g,b};
+}
+function rgba(hex, a) {
+const {r,g,b} = hexToRgb(hex);
+return `rgba(${r},${g},${b},${a})`;
+}
+
+function interp(depth, arr, d) {
+if (!arr || arr.length === 0) return null;
+if (d <= depth[0]) return arr[0];
+if (d >= depth[depth.length-1]) return arr[arr.length-1];
+for (let i = 0; i < depth.length-1; i++) {
+if (d >= depth[i] && d <= depth[i+1]) {
+const t = (d - depth[i]) / (depth[i+1] - depth[i]);
+return arr[i] + t*(arr[i+1]-arr[i]);
+}
+}
+return null;
+}
+
+function findThermocline(depth, temp, limit=600) {
+if (!temp || temp.every(isNaN)) return null;
+const pairs = depth
+.map((d,i) => ({d, t:temp[i]}))
+.filter(p => p.d <= limit && !isNaN(p.t));
+if (pairs.length < 3) return null;
+let maxG = 0, tcD = null;
+for (let i = 1; i < pairs.length; i++) {
+const g = Math.abs(pairs[i].t - pairs[i-1].t) / (pairs[i].d - pairs[i-1].d);
+if (g > maxG) { maxG = g; tcD = (pairs[i].d + pairs[i-1].d) / 2; }
+}
+return tcD;
+}
+
+// ── CSV Parser ────────────────────────────────────────────────────────────────
+function parseCSV(text, filename) {
+const result = Papa.parse(text.trim(), {header:true, dynamicTyping:true, skipEmptyLines:true});
+const rows = result.data;
+if (!rows.length) throw new Error("Empty file");
+
+const headers = Object.keys(rows[0]).map(h => h.trim().toLowerCase());
+const orig = Object.keys(rows[0]);
+
+function pick(kws, fb) {
+for (let i=0; i<headers.length; i++)
+if (kws.some(k => headers[i].includes(k))) return orig[i];
+return orig[fb] || null;
+}
+
+const cols = {
+depth: pick(["depth"], 0),
+sv: pick(["sos","sv","sound","vel"], 1),
+temp: pick(["tbin","temp","temperature"], 2),
+sal: pick(["sbin","salin","sal"], 3),
+cond: pick(["cbin","cond","conduct"], 4),
+};
+
+const depth=[], sv=[], temp=[], sal=[], cond=[];
+rows.forEach(row => {
+const d = parseFloat(row[cols.depth]);
+const s = parseFloat(row[cols.sv]);
+if (isNaN(d) || isNaN(s)) return;
+depth.push(d); sv.push(s);
+temp.push(cols.temp ? parseFloat(row[cols.temp]) : NaN);
+sal.push( cols.sal ? parseFloat(row[cols.sal]) : NaN);
+cond.push(cols.cond ? parseFloat(row[cols.cond]) : NaN);
+});
+
+if (!depth.length) throw new Error("No valid data rows");
+
+// Sort by depth
+const idx = depth.map((_,i)=>i).sort((a,b)=>depth[a]-depth[b]);
+const sort = arr => idx.map(i=>arr[i]);
+
+return {
+label: filename,
+short: filename.length > 30 ? filename.slice(0,28)+".." : filename,
+visible: true,
+depth: sort(depth),
+sv: sort(sv),
+temp: sort(temp),
+sal: sort(sal),
+cond: sort(cond),
+};
+}
+
+// ── Load files ────────────────────────────────────────────────────────────────
+function loadFiles(files) {
+Array.from(files).forEach(file => {
+const reader = new FileReader();
+reader.onload = e => {
+try {
+const prof = parseCSV(e.target.result, file.name);
+profiles.push(prof);
+refresh();
+} catch(err) {
+console.error("Parse error:", file.name, err);
+alert(`Could not parse ${file.name}:\n${err.message}`);
+}
+};
+reader.readAsText(file);
+});
+}
+
+document.getElementById("file-input").addEventListener("change", e => {
+loadFiles(e.target.files);
+e.target.value = "";
+});
+
+// Drag-and-drop onto window
+window.addEventListener("dragover", e => { e.preventDefault(); document.body.classList.add("dragover"); });
+window.addEventListener("dragleave", () => document.body.classList.remove("dragover"));
+window.addEventListener("drop", e => {
+e.preventDefault(); document.body.classList.remove("dragover");
+if (e.dataTransfer.files.length) loadFiles(e.dataTransfer.files);
+});
+
+// ── Plotly figure ─────────────────────────────────────────────────────────────
+function buildTraces() {
+const traces = [];
+const showTC = activeParam === "sv" || activeParam === "temp";
+const tcDrawn = new Set();
+
+profiles.forEach((prof, i) => {
+if (!prof.visible) return;
+const col = COLORS[i % COLORS.length];
+const arr = prof[activeParam];
+if (!arr || arr.every(isNaN)) return;
+
+const dep_f = [], arr_f = [];
+prof.depth.forEach((d, j) => {
+if (!isNaN(arr[j])) { dep_f.push(d); arr_f.push(arr[j]); }
+});
+if (!arr_f.length) return;
+
+const param = PARAMS.find(p=>p.key===activeParam);
+const hover = dep_f.map((d,j) =>
+`<b>${prof.short}</b><br>Depth: ${d.toFixed(0)} m<br>${param.label}: ${arr_f[j].toFixed(3)} ${param.unit}`
+);
+
+// Glow layers
+traces.push({x:arr_f, y:dep_f, mode:"lines",
+line:{color:col, width:16}, opacity:0.05,
+showlegend:false, hoverinfo:"skip", name:`_g1_${i}`});
+traces.push({x:arr_f, y:dep_f, mode:"lines",
+line:{color:col, width:8}, opacity:0.08,
+showlegend:false, hoverinfo:"skip", name:`_g2_${i}`});
+
+// Fill
+const base = Math.min(...arr_f);
+traces.push({
+x:[...arr_f, ...Array(arr_f.length).fill(base)],
+y:[...dep_f, ...[...dep_f].reverse()],
+fill:"toself", fillcolor:rgba(col, 0.06),
+mode:"none", showlegend:false, hoverinfo:"skip", name:`_fill_${i}`
+});
+
+// Core line
+traces.push({
+x:arr_f, y:dep_f,
+mode:"lines",
+name:prof.short,
+line:{color:col, width:2.2, shape:"spline", smoothing:0.6},
+hovertext:hover,
+hovertemplate:"%{hovertext}<extra></extra>",
+});
+
+// Thermocline
+if (showTC) {
+const tcD = findThermocline(prof.depth, prof.temp);
+if (tcD !== null) {
+const key = Math.round(tcD/25)*25;
+const tcV = interp(prof.depth, arr, tcD);
+if (tcV !== null && !tcDrawn.has(key)) {
+traces.push({
+x:[tcV], y:[tcD],
+mode:"markers+text",
+marker:{symbol:"diamond", size:11, color:col, line:{color:"white",width:1}},
+text:[` TC ${tcD.toFixed(0)} m`],
+textposition:"top right",
+textfont:{color:col, size:10, family:"JetBrains Mono"},
+showlegend:false,
+hovertemplate:`<b>Thermocline</b><br>Depth: ${tcD.toFixed(0)} m<extra></extra>`,
+name:`_tc_${i}`,
+});
+tcDrawn.add(key);
+}
+}
+}
+});
+return traces;
+}
+
+function buildLayout() {
+const vis = profiles.filter(p=>p.visible);
+const param = PARAMS.find(p=>p.key===activeParam);
+
+// Axis limits
+let allD=[], allV=[];
+vis.forEach(p => {
+allD.push(...p.depth);
+const arr = p[activeParam];
+if (arr) allD.length && arr.forEach((v,j)=>{ if(!isNaN(v)) allV.push(v); });
+});
+vis.forEach(p => {
+const arr = p[activeParam];
+if (arr) arr.forEach(v=>{ if(!isNaN(v)) allV.push(v); });
+});
+
+let yRange = [3200, 0];
+if (allD.length) {
+const mn=Math.min(...allD), mx=Math.max(...allD);
+const pad=(mx-mn)*0.04||50;
+yRange = [mx+pad, Math.max(0, mn-pad)];
+}
+let xRange = null;
+if (allV.length) {
+const mn=Math.min(...allV), mx=Math.max(...allV);
+const pad=(mx-mn)*0.08||1;
+xRange = [mn-pad, mx+pad];
+}
+
+// Ocean zone shapes
+const yMax = allD.length ? Math.max(...allD) : 3200;
+const shapes = [];
+[[0,200,"rgba(0,20,32,0.5)"],[200,1000,"rgba(0,14,24,0.4)"],[1000,9999,"rgba(0,8,15,0.3)"]].forEach(([y1,y2,fc])=>{
+if (y1 < yMax) shapes.push({type:"rect",xref:"paper",yref:"y",x0:0,x1:1,y0:y1,y1:Math.min(y2,yMax),fillcolor:fc,line:{width:0},layer:"below"});
+});
+
+// TC hlines
+const showTC = activeParam === "sv" || activeParam === "temp";
+if (showTC) {
+const tcDrawn = new Set();
+vis.forEach((prof,i) => {
+const tcD = findThermocline(prof.depth, prof.temp);
+if (tcD === null) return;
+const key = Math.round(tcD/25)*25;
+if (tcDrawn.has(key)) return;
+const col = COLORS[profiles.indexOf(prof) % COLORS.length];
+shapes.push({
+type:"line", xref:"paper", yref:"y",
+x0:0, x1:1, y0:tcD, y1:tcD,
+line:{color:col, width:1, dash:"dot"}, opacity:0.4,
+});
+tcDrawn.add(key);
+});
+}
+
+// Zone labels
+const annotations = [];
+[[90,"EPIPELAGIC"],[500,"MESOPELAGIC"],[1600,"BATHYPELAGIC"]].forEach(([yd,lbl])=>{
+if (yd < yMax) annotations.push({
+x:1, y:yd, xref:"paper", yref:"y",
+text:lbl, showarrow:false,
+font:{size:9,color:DIM,family:"JetBrains Mono"},
+xanchor:"right", yanchor:"middle",
+});
+});
+
+return {
+paper_bgcolor: BG,
+plot_bgcolor: "#040c12",
+font: {family:"JetBrains Mono", color:TEXT},
+margin: {l:68, r:18, t:18, b:58},
+shapes, annotations,
+xaxis: {
+title:{text:`${param.label} (${param.unit})`, font:{size:11,color:DIM}},
+tickfont:{size:9,color:DIM},
+gridcolor:GRID, gridwidth:0.5,
+linecolor:ACCENT, linewidth:1.5,
+zeroline:false,
+range:xRange,
+},
+yaxis: {
+title:{text:"Depth (m)", font:{size:11,color:DIM}},
+tickfont:{size:9,color:DIM},
+gridcolor:GRID, gridwidth:0.5,
+linecolor:"#0096b4", linewidth:1.0,
+zeroline:false,
+range:yRange,
+autorange:false,
+},
+legend:{
+bgcolor:BG3, bordercolor:GRID, borderwidth:1,
+font:{size:9,color:DIM},
+x:1, y:0, xanchor:"right", yanchor:"bottom",
+},
+hovermode:"closest",
+dragmode:"zoom",
+modebar:{bgcolor:BG2, color:DIM, activecolor:ACCENT},
+};
+}
+
+function renderPlot() {
+const traces = buildTraces();
+const layout = buildLayout();
+const config = {
+scrollZoom:true,
+displayModeBar:true,
+modeBarButtonsToRemove:["select2d","lasso2d","autoScale2d"],
+toImageButtonOptions:{format:"png",filename:"SVP_PXGEO",height:900,width:1600,scale:2},
+responsive:true,
+};
+
+if (!plotInited) {
+Plotly.newPlot("plot", traces, layout, config);
+plotInited = true;
+
+// Hover event
+document.getElementById("plot").on("plotly_hover", data => {
+try {
+const pt = data.points.find(p=>!p.data.name?.startsWith("_"));
+if (!pt) return;
+hoverDepth = pt.y;
+updateReadout(pt.y);
+const lbl = document.getElementById("cursor-lbl");
+lbl.textContent = `⊕ ${pt.y.toFixed(1)} m`;
+lbl.classList.add("lit");
+} catch(e) {}
+});
+document.getElementById("plot").on("plotly_unhover", () => {
+hoverDepth = null;
+updateReadout(null);
+const lbl = document.getElementById("cursor-lbl");
+lbl.textContent = "Hover to inspect";
+lbl.classList.remove("lit");
+});
+} else {
+Plotly.react("plot", traces, layout, config);
+}
+}
+
+// ── Readout ───────────────────────────────────────────────────────────────────
+function updateReadout(depth) {
+const roD = document.getElementById("ro-depth");
+const roV = document.getElementById("ro-vals");
+const rod = document.getElementById("ro-delta");
+
+if (depth === null) {
+roD.textContent = "—";
+roV.innerHTML = "";
+rod.textContent = "";
+return;
+}
+
+roD.textContent = `${Math.round(depth)} m`;
+const param = PARAMS.find(p=>p.key===activeParam);
+let html = "", vals = [];
+
+profiles.forEach((prof, i) => {
+if (!prof.visible) return;
+if (depth < prof.depth[0] || depth > prof.depth[prof.depth.length-1]) return;
+const arr = prof[activeParam];
+if (!arr) return;
+const val = interp(prof.depth, arr, depth);
+if (val === null || isNaN(val)) return;
+vals.push(val);
+const col = COLORS[i % COLORS.length];
+html += `<div class="rval">
+<div class="rlabel" style="color:${col}88">${prof.short.slice(0,22)}</div>
+<div class="rnum" style="color:${col}">${val.toFixed(3)} <span style="font-size:9px;opacity:0.5">${param.unit}</span></div>
+</div>`;
+});
+
+roV.innerHTML = html;
+rod.textContent = vals.length === 2
+? `Δ ${Math.abs(vals[0]-vals[1]).toFixed(4)} ${param.unit}`
+: "";
+}
+
+// ── Sidebar renders ───────────────────────────────────────────────────────────
+function renderParamBtns() {
+const pb = document.getElementById("param-btns");
+const tb = document.getElementById("tab-btns");
+pb.innerHTML = "";
+tb.innerHTML = "";
+
+PARAMS.forEach(p => {
+const active = p.key === activeParam;
+
+// Sidebar btn
+const sb = document.createElement("button");
+sb.className = "pbtn" + (active?" active":"");
+sb.innerHTML = `${p.label}<span class="pbtn-unit">${p.unit}</span>`;
+sb.onclick = () => { activeParam = p.key; refresh(); };
+pb.appendChild(sb);
+
+// Tab btn
+const tbtn = document.createElement("button");
+tbtn.className = "tbtn" + (active?" active":"");
+tbtn.textContent = p.label;
+tbtn.onclick = () => { activeParam = p.key; refresh(); };
+tb.appendChild(tbtn);
+});
+}
+
+function renderProfileList() {
+const pl = document.getElementById("profile-list");
+pl.innerHTML = "";
+if (!profiles.length) {
+pl.innerHTML = `<div style="font-size:9px;color:var(--dim);margin-top:4px">No profiles loaded</div>`;
+return;
+}
+profiles.forEach((prof, i) => {
+const col = COLORS[i % COLORS.length];
+const vis = prof.visible;
+const card = document.createElement("div");
+card.className = "pcard" + (vis?"":" hidden-prof");
+card.style.borderColor = vis ? col+"44" : "transparent";
+card.style.background = vis ? col+"0a" : "transparent";
+card.innerHTML = `
+<div class="pbar" style="background:${vis?col:"var(--dim)"}"></div>
+<div class="pinfo">
+<div class="pname" style="color:${vis?col:"var(--dim)"}">${prof.short}</div>
+<div class="psub">PXGEO · ${vis?"visible":"hidden"}</div>
+</div>
+<span class="ptoggle" style="color:${vis?col:"var(--dim)"}">${vis?"●":"○"}</span>`;
+card.onclick = () => { profiles[i].visible = !profiles[i].visible; refresh(); };
+pl.appendChild(card);
+});
+}
+
+function renderTCList() {
+const tc = document.getElementById("tc-list");
+const vis = profiles.filter(p=>p.visible);
+if (!vis.length) { tc.innerHTML = `<div style="font-size:9px;color:var(--dim)">—</div>`; return; }
+tc.innerHTML = vis.map((prof) => {
+const i = profiles.indexOf(prof);
+const col = COLORS[i % COLORS.length];
+const tcD = findThermocline(prof.depth, prof.temp);
+return `<div class="tcrow">
+<span><span class="tcline" style="background:${col}"></span> ${prof.short.slice(0,16)}</span>
+<span class="tcval" style="color:${col}">${tcD?tcD.toFixed(0)+" m":"N/A"}</span>
+</div>`;
+}).join("");
+}
+
+function updateStatus() {
+const n = profiles.length;
+document.getElementById("status").textContent =
+n ? `${n} profile${n>1?"s":""} loaded` : "No profiles loaded";
+document.getElementById("empty-msg").classList.toggle("gone", n > 0);
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function clearAll() {
+profiles = []; plotInited = false;
+Plotly.purge("plot");
+refresh();
+}
+
+function exportPNG() {
+if (!plotInited) return;
+Plotly.downloadImage("plot", {format:"png",filename:"SVP_PXGEO",width:1600,height:900,scale:2});
+}
+
+function exportCSVSummary() {
+if (!profiles.length) return;
+const rows = ["Profile,Depth min (m),Depth max (m),SV min (m/s),SV max (m/s),SV surface (m/s),T surface (°C),T bottom (°C),Thermocline (m)"];
+profiles.filter(p=>p.visible).forEach(prof => {
+const sv = prof.sv.filter(v=>!isNaN(v));
+const t = prof.temp.filter(v=>!isNaN(v));
+const tc = findThermocline(prof.depth, prof.temp);
+rows.push([
+prof.short,
+Math.min(...prof.depth).toFixed(0),
+Math.max(...prof.depth).toFixed(0),
+Math.min(...sv).toFixed(2),
+Math.max(...sv).toFixed(2),
+sv[0]?.toFixed(2) ?? "N/A",
+t[0]?.toFixed(2) ?? "N/A",
+t[t.length-1]?.toFixed(2) ?? "N/A",
+tc ? tc.toFixed(0) : "N/A",
+].join(","));
+});
+const blob = new Blob([rows.join("\n")], {type:"text/csv"});
+const a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = `SVP_summary_${new Date().toISOString().slice(0,10)}.csv`;
+a.click();
+}
+
+// ── Main refresh ──────────────────────────────────────────────────────────────
+function refresh() {
+renderParamBtns();
+renderProfileList();
+renderTCList();
+updateStatus();
+renderPlot();
+updateReadout(hoverDepth);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.getElementById("bot-date").textContent = new Date().toLocaleDateString("en-GB",{year:"numeric",month:"short",day:"numeric"});
+refresh();
+</script>
+
+</body>
+</html>
