@@ -12,9 +12,9 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@700;800&display=swap');
 
 :root {
-–bg:#050e14; –bg2:#071319; –bg3:#0a1c25;
-–border:#0d2535; –accent:#00b4d8; –accent3:#48cae4;
-–text:#caf0f8; –dim:#2a5a72; –grid:#0a1e2a;
+–bg:#000000; –bg2:#0a0a0a; –bg3:#111111;
+–border:#1e1e1e; –accent:#00b4d8; –accent3:#48cae4;
+–text:#caf0f8; –dim:#2a5a72; –grid:#141414;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
@@ -100,7 +100,7 @@ aside{width:230px;flex-shrink:0;background:var(–bg2);border-right:2px solid va
 ::-webkit-scrollbar-track{background:var(–bg2)}
 ::-webkit-scrollbar-thumb{background:var(–border);border-radius:2px}
 
-#pdf-progress{display:none;position:fixed;inset:0;background:rgba(5,14,20,0.88);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+#pdf-progress{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:12px}
 #pdf-progress.show{display:flex}
 #pdf-progress p{font-size:11px;color:var(–accent3);letter-spacing:2px}
 </style>
@@ -182,8 +182,8 @@ aside{width:230px;flex-shrink:0;background:var(–bg2);border-right:2px solid va
 </div>
 
 <script>
-const BG="#050e14",BG2="#071319",BG3="#0a1c25";
-const ACCENT="#00b4d8",ACCENT3="#48cae4",TEXT="#caf0f8",DIM="#2a5a72",GRID="#0a1e2a";
+const BG="#000000",BG2="#0a0a0a",BG3="#111111";
+const ACCENT="#00b4d8",ACCENT3="#48cae4",TEXT="#caf0f8",DIM="#2a5a72",GRID="#141414";
 const COLORS=["#00ffc8","#ff3c3c","#50ff50","#ffc800","#b43cff","#00b4ff","#ff64b4","#ff8c00"];
 const PARAMS=[
 {key:"sv", label:"Sound Velocity",unit:"m/s"},
@@ -330,7 +330,7 @@ if(yd<yMax)annotations.push({x:1,y:yd,xref:"paper",yref:"y",text:lbl,showarrow:f
 });
 if(!vis.length)annotations.push({x:0.5,y:0.5,xref:"paper",yref:"paper",text:"Click + Add CSV to load profiles",showarrow:false,font:{size:14,color:DIM},xanchor:"center",yanchor:"middle"});
 return{
-paper_bgcolor:BG,plot_bgcolor:"#040c12",
+paper_bgcolor:BG,plot_bgcolor:"#000000",
 font:{family:"JetBrains Mono",color:TEXT},
 margin:{l:68,r:18,t:18,b:58},
 shapes,annotations,
@@ -493,10 +493,10 @@ const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
 const imgData=await Plotly.toImage("plot",{format:"png",width:1600,height:820,scale:1.5});
 
 // Dark background
-doc.setFillColor(5,14,20);doc.rect(0,0,W,H,"F");
+doc.setFillColor(0,0,0);doc.rect(0,0,W,H,"F");
 
 // Header
-doc.setFillColor(7,19,25);doc.rect(0,0,W,18,"F");
+doc.setFillColor(10,10,10);doc.rect(0,0,W,18,"F");
 doc.setDrawColor(0,180,216);doc.setLineWidth(0.4);doc.line(0,18,W,18);
 doc.setFontSize(18);doc.setFont("helvetica","bold");
 doc.setTextColor(72,202,228);doc.text("PXGEO",12,13);
@@ -517,10 +517,10 @@ doc.text(`PXGEO SVP alfa · ${new Date().toLocaleDateString("en-GB")}`,10,H-2);
 
 // ── Page 2: Statistics table ──
 doc.addPage("a4","landscape");
-doc.setFillColor(5,14,20);doc.rect(0,0,W,H,"F");
+doc.setFillColor(0,0,0);doc.rect(0,0,W,H,"F");
 
 // Header
-doc.setFillColor(7,19,25);doc.rect(0,0,W,18,"F");
+doc.setFillColor(10,10,10);doc.rect(0,0,W,18,"F");
 doc.setDrawColor(0,180,216);doc.setLineWidth(0.4);doc.line(0,18,W,18);
 doc.setFontSize(18);doc.setFont("helvetica","bold");
 doc.setTextColor(72,202,228);doc.text("PXGEO",12,13);
