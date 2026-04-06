@@ -333,31 +333,12 @@ const sv=prof.sv.filter(v=>!isNaN(v));
 const t=prof.temp.filter(v=>!isNaN(v));
 const s=prof.sal.filter(v=>!isNaN(v));
 const d=prof.depth;
-// Harmonic mean velocity (HMV)
-let hmv=null;
-if(sv.length>=2&&d.length>=2){
-let tt=0;
-for(let i=0;i<d.length-1;i++){
-const dz=d[i+1]-d[i];
-const avgv=(sv[i]+sv[i+1])/2;
-if(!isNaN(dz)&&!isNaN(avgv)&&avgv>0)tt+=dz/avgv;
-}
-hmv=tt>0?(d[d.length-1]-d[0])/tt:null;
-}
-// TWTT to bottom
-let twtt=null;
-if(hmv&&d.length){
-const dz=d[d.length-1]-d[0];
-twtt=(dz/hmv)*2*1000; // ms
-}
 return{
 svMin:sv.length?Math.min(...sv):null,
 svMax:sv.length?Math.max(...sv):null,
 svMean:sv.length?sv.reduce((a,b)=>a+b,0)/sv.length:null,
 svSurf:sv[0]??null,
 svBott:sv[sv.length-1]??null,
-hmv,
-twtt,
 tSurf:t[0]??null,
 tBott:t[t.length-1]??null,
 sMean:s.length?s.reduce((a,b)=>a+b,0)/s.length:null,
@@ -584,9 +565,7 @@ return`<div class="stat-card" style="border-color:${col}33">
 <div class="stat-cell"><div class="stat-lbl">SV MIN</div><div class="stat-val" style="color:${col}">${fmt(st.svMin)}</div></div>
 <div class="stat-cell"><div class="stat-lbl">SV MAX</div><div class="stat-val" style="color:${col}">${fmt(st.svMax)}</div></div>
 <div class="stat-cell"><div class="stat-lbl">MEAN SV</div><div class="stat-val" style="color:${col}">${fmt(st.svMean)}</div></div>
-<div class="stat-cell"><div class="stat-lbl">HMV</div><div class="stat-val" style="color:${col}">${fmt(st.hmv)}</div></div>
-<div class="stat-cell"><div class="stat-lbl">TWTT (ms)</div><div class="stat-val" style="color:${col}">${fmt(st.twtt,1)}</div></div>
-<div class="stat-cell"><div class="stat-lbl">T SURFACE</div><div class="stat-val" style="color:${col}">${fmt(st.tSurf)} °C</div></div>
+<div class="stat-cell"><div class="stat-lbl">T SURFACE</div><div class="stat-val" style="color:${col}">${fmt(st.tSurf)} °v></diC</div></div>
 <div class="stat-cell"><div class="stat-lbl">T BOTTOM</div><div class="stat-val" style="color:${col}">${fmt(st.tBott)} °C</div></div>
 <div class="stat-cell"><div class="stat-lbl">MEAN SAL</div><div class="stat-val" style="color:${col}">${fmt(st.sMean)} PSU</div></div>
 </div>
@@ -646,11 +625,11 @@ function exportPNG(){if(plotInited)Plotly.downloadImage("plot",{format:"png",fil
 
 function exportCSV(){
 if(!profiles.length)return;
-const rows=["Profile,Depth min,Depth max,SV min,SV max,SV mean,HMV,TWTT (ms),T surface,T bottom,Mean Sal,Thermocline (m)"];
+const rows=["Profile,Depth min,Depth max,SV min,SV max,SV mean,T surface,T bottom,Mean Sal,Thermocline (m)"];
 profiles.filter(p=>p.visible).forEach(prof=>{
 const st=calcStats(prof);
 const f=(v,d=2)=>v!==null&&!isNaN(v)?v.toFixed(d):"N/A";
-rows.push([prof.short,f(st.depMin,0),f(st.depMax,0),f(st.svMin),f(st.svMax),f(st.svMean),f(st.hmv),f(st.twtt,1),f(st.tSurf),f(st.tBott),f(st.sMean),st.tc?st.tc.toFixed(0):"N/A"].join(","));
+rows.push([prof.short,f(st.depMin,0),f(st.depMax,0),f(st.svMin),f(st.svMax),f(st.svMean),f(st.tSurf),f(st.tBott),f(st.sMean),st.tc?st.tc.toFixed(0):"N/A"].join(","));
 });
 const blob=new Blob([rows.join("\n")],{type:"text/csv"});
 const a=document.createElement("a");a.href=URL.createObjectURL(blob);
@@ -694,15 +673,15 @@ doc.text(new Date().toLocaleString("en-GB"),W-12,14,{align:"right"});
 doc.setDrawColor(0,180,216);doc.setLineWidth(0.3);doc.line(12,22,W-12,22);
 
 // Stats table
-const stHeaders=["Profile","Depth (m)","SV surf","SV min","SV max","SV mean","HMV (m/s)","TWTT (ms)","T surf °C","T bot °C","Sal PSU","TC (m)"];
+const stHeaders=["Profile","Depth (m)","SV surf","SV min","SV max","SV mean","T surf °C","T bot °C","Sal PSU","TC (m)"];
 const stRows=vis.map((prof,i)=>{
 const st=calcStats(prof);
 const f=(v,d=2)=>v!==null&&!isNaN(v)?v.toFixed(d):"N/A";
-return[prof.short.slice(0,22),`${f(st.depMin,0)}–${f(st.depMax,0)}`,f(st.svSurf),f(st.svMin),f(st.svMax),f(st.svMean),f(st.hmv),f(st.twtt,1),f(st.tSurf),f(st.tBott),f(st.sMean),st.tc?st.tc.toFixed(0):"N/A"];
+return[prof.short.slice(0,22),`${f(st.depMin,0)}–${f(st.depMax,0)}`,f(st.svSurf),f(st.svMin),f(st.svMax),f(st.svMean),f(st.tSurf),f(st.tBott),f(st.sMean),st.tc?st.tc.toFixed(0):"N/A"];
 });
 
 // Table header
-const tY=30,tX=12,cW=[38,20,16,14,14,14,16,16,14,14,14,12];
+const tY=30,tX=12,cW=[38,20,16,14,14,14,14,14,14,12];
 let cx=tX;
 doc.setFillColor(0,150,180);doc.rect(tX,tY,W-24,8,"F");
 doc.setFontSize(7);doc.setFont("helvetica","bold");doc.setTextColor(255,255,255);
